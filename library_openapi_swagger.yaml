@@ -1,0 +1,143 @@
+openapi: 3.1.0
+info:
+  title: Библиотека
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080/api/v1
+tags:
+  - name: reader
+    description: Взаимодействие с читателями библиотеки
+paths:
+  /readers:
+    post:
+      tags:
+        - reader
+      summary: Создание нового читателя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reader'
+      responses:
+        '201':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reader'
+        '400':
+          description: Неверный запрос
+    get:
+      tags:
+        - reader
+      summary: Получение всех читателей
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Readers'
+  /readers/{readerId}:
+    get:
+      tags:
+        - reader
+      summary: Получение определённого читателя
+      parameters:
+        - name: readerId
+          in: path
+          description: Идентификатор читателя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reader'
+        '404':
+          description: Ресурс не найден
+    put:
+      tags:
+        - reader
+      summary: Обновление читателя
+      parameters:
+        - name: readerId
+          in: path
+          description: Идентификатор читателя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reader'
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reader'
+        '400':
+          description: Неверный запрос
+        '404':
+          description: Ресурс не найден
+    delete:
+      tags:
+        - reader
+      summary: Удаление читателя
+      parameters:
+        - name: readerId
+          in: path
+          description: Идентификатор читателя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Успешная операция
+        '404':
+          description: Ресурс не найден
+components:
+  schemas:
+    Reader:
+      required:
+        - firstName
+        - lastName
+        - passport
+        - address
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          examples: [3]
+        firstName:
+          type: string
+          examples: [Иван]
+        lastName:
+          type: string
+          examples: [Иванов]
+        patronymic:
+          type: string
+          examples: [Иванович]
+        passport:
+          type: string
+          examples: [1234123456]
+        address:
+          type: string
+          examples: ['г. Тестовый, ул. Тестовая, д. 10, кв. 8']
+        phone:
+          type: string
+          examples: ['+71231231212']
+    Readers:
+      type: array
+      items:
+        $ref: '#/components/schemas/Reader'
